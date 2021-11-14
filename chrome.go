@@ -374,6 +374,15 @@ func (c *chrome) eval(expr string) (json.RawMessage, error) {
 	return c.send("Runtime.evaluate", h{"expression": expr, "awaitPromise": true, "returnByValue": true})
 }
 
+func (c *chrome) addScriptToEvaluateOnNewDocument(script string) error {
+	_, err := c.send("Page.addScriptToEvaluateOnNewDocument", h{"source": script})
+	if err != nil {
+		return err
+	}
+	_, err = c.eval(script)
+	return err
+}
+
 func (c *chrome) bind(name string, f bindingFunc) error {
 	c.Lock()
 	// check if binding already exists

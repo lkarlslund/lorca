@@ -15,7 +15,9 @@ type UI interface {
 	Bounds() (Bounds, error)
 	SetBounds(Bounds) error
 	Bind(name string, f interface{}) error
+	AddScriptToEvaluateOnNewDocument(js string) error
 	Eval(js string) Value
+	Send(method string, params h) Value
 	Done() <-chan struct{}
 	Close() error
 }
@@ -26,7 +28,7 @@ type ui struct {
 	tmpDir string
 }
 
-var defaultChromeArgs = []string{
+var DefaultChromeArgs = []string{
 	"--disable-background-networking",
 	"--disable-background-timer-throttling",
 	"--disable-backgrounding-occluded-windows",
@@ -72,7 +74,7 @@ func New(url, dir string, width, height int, customArgs ...string) (UI, error) {
 		}
 		dir, tmpDir = name, name
 	}
-	args := append(defaultChromeArgs, fmt.Sprintf("--app=%s", url))
+	args := append(DefaultChromeArgs, fmt.Sprintf("--app=%s", url))
 	args = append(args, fmt.Sprintf("--user-data-dir=%s", dir))
 	args = append(args, fmt.Sprintf("--window-size=%d,%d", width, height))
 	args = append(args, customArgs...)
@@ -164,6 +166,15 @@ func (u *ui) Bind(name string, f interface{}) error {
 
 func (u *ui) Eval(js string) Value {
 	v, err := u.chrome.eval(js)
+	return value{err: err, raw: v}
+}
+
+func (u *ui) AddScriptToEvaluateOnNewDocument(js string) error {
+	return u.chrome.addScriptToEvaluateOnNewDocument(js)
+}
+
+func (u *ui) Send(method string, params h) Value {
+	v, err := u.chrome.send(method, params)
 	return value{err: err, raw: v}
 }
 
