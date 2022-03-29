@@ -34,6 +34,7 @@ func LocateChrome() string {
 			"/usr/bin/google-chrome",
 			"/usr/bin/chromium",
 			"/usr/bin/chromium-browser",
+			"/usr/bin/brave",
 		}
 	case "windows":
 		paths = []string{
@@ -45,6 +46,8 @@ func LocateChrome() string {
 			os.Getenv("ProgramFiles(x86)") + "/Chromium/Application/chrome.exe",
 			os.Getenv("ProgramFiles(x86)") + "/Microsoft/Edge/Application/msedge.exe",
 			os.Getenv("ProgramFiles") + "/Microsoft/Edge/Application/msedge.exe",
+			os.Getenv("ProgramFiles(x86)") + "/BraveSoftware/Brave-Browser/Application/brave.exe"",
+			os.Getenv("ProgramFiles") + "/BraveSoftware/Brave-Browser/Application/brave.exe"",
 		}
 	default:
 		paths = []string{
@@ -53,6 +56,7 @@ func LocateChrome() string {
 			"/usr/bin/chromium",
 			"/usr/bin/chromium-browser",
 			"/snap/bin/chromium",
+			"/usr/bin/brave",
 		}
 	}
 
